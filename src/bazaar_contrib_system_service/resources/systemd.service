@@ -1,0 +1,19 @@
+# {{ managed_marker }}
+[Unit]
+Description=Bazaar Compute Node
+
+[Service]
+Type=simple
+ExecStart=:env {{ home_environment }} {{ python }} {{ supervisor_path }} --executable {{ executable }} {{ node_options }}
+WorkingDirectory={{ data_dir }}
+Environment={{ home_environment }}
+{% if environment_file %}EnvironmentFile=-{{ environment_file }}
+{% endif %}Restart=on-failure
+RestartSec=5
+KillSignal=SIGTERM
+TimeoutStopSec=15
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

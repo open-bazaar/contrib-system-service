@@ -136,3 +136,20 @@ run on a development machine, whose own node uses the same service names.
 Publish `bazaar-contrib-system-service` through the release workflow of the
 other plugins, then add it to `open-bazaar/contrib-index`, sorted by package
 name, so the next manager build ships it in the built-in index.
+
+## Local validation
+
+Ruff and format checks, Pyright CLI for Linux, macOS and Windows and the
+language-server check pass. Six tests pass: the systemd unit, launchd agent and
+Windows task rendered for paths that need quoting and hold non-ASCII
+characters, with the Windows scripts' byte order marks, the marker guards with
+real files, `--force` replacing a handwritten one, the supervisor starting a
+fresh copy of a read-only installed executable after its child exits, on POSIX,
+and independent wheel and sdist installations whose commands' help, `--force`
+included, runs through a real bootstrapped node. The Windows-only test that
+hands the wrapper's command line to a real Python is skipped here and runs on
+the Windows runner. Blockbuster is active in pytest and in those node
+processes. An isolated node with both entries enabled answered
+`bcn system-service status` with `health=unreachable` before it ran and
+`health=ready` once it was up, read through the sidecar from
+`system-service-readiness`.

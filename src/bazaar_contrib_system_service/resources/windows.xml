@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+    <RegistrationInfo>
+        <Author>{{ user | e }}</Author>
+        <Description>{{ managed_marker | e }}</Description>
+    </RegistrationInfo>
+    <Triggers>
+        <LogonTrigger>
+            <Enabled>true</Enabled>
+            <UserId>{{ user | e }}</UserId>
+        </LogonTrigger>
+    </Triggers>
+    <Principals>
+        <Principal id="Author">
+            <UserId>{{ user | e }}</UserId>
+            <LogonType>InteractiveToken</LogonType>
+            <RunLevel>LeastPrivilege</RunLevel>
+        </Principal>
+    </Principals>
+    <Settings>
+        <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+        <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+        <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+        <AllowHardTerminate>true</AllowHardTerminate>
+        <StartWhenAvailable>true</StartWhenAvailable>
+        <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+        <RestartOnFailure>
+            <Interval>PT5M</Interval>
+            <Count>3</Count>
+        </RestartOnFailure>
+    </Settings>
+    <Actions Context="Author">
+        <Exec>
+            <Command>wscript.exe</Command>
+            <Arguments>{{ arguments | e }}</Arguments>
+            <WorkingDirectory>{{ data_dir | e }}</WorkingDirectory>
+        </Exec>
+    </Actions>
+</Task>

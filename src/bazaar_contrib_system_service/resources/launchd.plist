@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>{{ label | e }}</string>
+    <key>Comment</key>
+    <string>{{ managed_marker | e }}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ wrapper_path | e }}</string>
+{% for option in node_options %}        <string>{{ option | e }}</string>
+{% endfor %}    </array>
+    <key>WorkingDirectory</key>
+    <string>{{ data_dir | e }}</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>BCN_HOME</key>
+        <string>{{ home_dir | e }}</string>
+        <key>BCN_ENV_FILE</key>
+        <string>{{ environment_file | e }}</string>
+        <key>BCN_EXECUTABLE</key>
+        <string>{{ executable | e }}</string>
+        <key>BCN_PYTHON</key>
+        <string>{{ python | e }}</string>
+        <key>BCN_SUPERVISOR</key>
+        <string>{{ supervisor_path | e }}</string>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>ThrottleInterval</key>
+    <integer>5</integer>
+    <key>StandardOutPath</key>
+    <string>{{ log_path | e }}</string>
+    <key>StandardErrorPath</key>
+    <string>{{ log_path | e }}</string>
+</dict>
+</plist>
