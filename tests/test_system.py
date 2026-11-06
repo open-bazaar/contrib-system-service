@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import os
 import signal
 import subprocess
@@ -12,6 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
+from remote import call
 
 from bazaar_contrib_system_service.service import (
     LAUNCHD_LABEL,
@@ -25,6 +27,8 @@ PLUGIN = """
 package = "bazaar-contrib-system-service @ {uri}"
 [[contribs.enabled]]
 entry = "system-service"
+[[contribs.enabled]]
+entry = "system-service-process"
 [[contribs.enabled]]
 entry = "system-service-readiness"
 """
@@ -216,7 +220,9 @@ def node(tmp_path: Path, tmp_path_factory: pytest.TempPathFactory) -> Iterator[N
                 )
 
 
-def test_installed_commands_drive_the_native_service(node: Node):
+def test_installed_commands_drive_the_native_service(
+    node: Node, monkeypatch: pytest.MonkeyPatch
+):
     assert "system service installed" in node.run("system-service", "install")
     assert all(path.is_file() for path in node.managed_files())
 
@@ -243,6 +249,18 @@ def test_installed_commands_drive_the_native_service(node: Node):
     ), node.logs()
 
     assert "health=ready" in node.run("system-service", "restart")
+
+    # bcc node upgrade restarts the node this way once the new release is in
+    first = node.node_process()
+    assert first is not None
+    monkeypatch.setenv("BCN_HOME", node.environment["BCN_HOME"])
+    asyncio.run(call("system-service", "restart"))
+    assert eventually(lambda: node.node_process() not in (None, first), 120), (
+        node.logs()
+    )
+    assert eventually(
+        lambda: "health=ready" in node.run("system-service", "status"), 300
+    ), node.logs()
 
     node.run("system-service", "stop")
     status = node.run("system-service", "status")

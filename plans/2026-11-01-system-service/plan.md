@@ -137,19 +137,41 @@ Publish `bazaar-contrib-system-service` through the release workflow of the
 other plugins, then add it to `open-bazaar/contrib-index`, sorted by package
 name, so the next manager build ships it in the built-in index.
 
+## Task 4: Restart through the sidecar
+
+As decided for BCN 0.3 in messages `1e36d3b0-d199-5d7e-b101-d1845566e3cd`,
+`c8ce6450-d1dd-50a7-8b02-feea93a05db7`, `1cca004d-6b4a-55a7-8e70-1cac0507dde1`
+and `897f1d71-9e4f-5394-97e5-659d9f2387d1`, restarting the node belongs to this
+plugin on every platform: `bcc node upgrade` installs the new release, then
+calls the member `restart` of this package's remote `system-service`. The
+`system-service-process` contrib offers `system-service.process`, whose
+`restart()` raises `SIGINT` in the node's own process, so the node ends as
+Ctrl+C ends it and the supervisor starts the installed `bcn`, now the new
+release, a second later. As decided in messages
+`87081cbe-1f93-52bd-a5fe-6827a76cd72b`, `6b106d96-77e5-573e-afba-c28454386c8f`
+and `c2513e09-ab73-5f38-88bf-a5250f9312a2`, a node run in the foreground ends
+the same way.
+
+Verify that a foreground `bcn run` of the installed wheel ends once `restart`
+is called through its sidecar, and add to the system tests a `restart` called
+through the sidecar after `bcn system-service restart`, upon which the
+supervisor starts a fresh copy that becomes ready. The tests reach the sidecar
+through the published `sidecar-unix` and `sidecar-windows` transports.
+
 ## Local validation
 
 Ruff and format checks, Pyright CLI for Linux, macOS and Windows and the
-language-server check pass. Six tests pass: the systemd unit, launchd agent and
-Windows task rendered for paths that need quoting and hold non-ASCII
+language-server check pass. Eight tests pass: the systemd unit, launchd agent
+and Windows task rendered for paths that need quoting and hold non-ASCII
 characters, with the Windows scripts' byte order marks, the marker guards with
 real files, `--force` replacing a handwritten one, the supervisor starting a
 fresh copy of a read-only installed executable after its child exits, on POSIX,
-and independent wheel and sdist installations whose commands' help, `--force`
-included, runs through a real bootstrapped node. The Windows-only test that
-hands the wrapper's command line to a real Python is skipped here and runs on
-the Windows runner. Blockbuster is active in pytest and in those node
-processes. An isolated node with both entries enabled answered
-`bcn system-service status` with `health=unreachable` before it ran and
-`health=ready` once it was up, read through the sidecar from
+independent wheel and sdist installations whose commands' help, `--force`
+included, runs through a real bootstrapped node, and a foreground `bcn run` of
+the installed wheel ending once `restart` is called through its sidecar. The
+Windows-only test that hands the wrapper's command line to a real Python is
+skipped here and runs on the Windows runner. Blockbuster is active in pytest
+and in those node processes. An isolated node with both entries enabled
+answered `bcn system-service status` with `health=unreachable` before it ran
+and `health=ready` once it was up, read through the sidecar from
 `system-service-readiness`.

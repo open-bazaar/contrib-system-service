@@ -17,6 +17,8 @@ bcn system-service start
 The service runs the node with the configuration the install command used. It
 reads its environment from `~/.config/bcn/runtime.env`, or `runtime.ps1` on
 Windows, when that file exists; `install --env-file PATH` selects another.
+When an agent upgrades the node, the node exits and the service starts it
+again on the new release.
 
 ## Commands
 
