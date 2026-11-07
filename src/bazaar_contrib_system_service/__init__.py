@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import re
+import signal
 from contextlib import ExitStack, asynccontextmanager
 
 from bazaar_contrib_config import CONFIGURATION
@@ -17,12 +18,16 @@ from .cli import DEPRECATED, DESCRIPTION, create_commands
 from .service import SystemService
 
 __all__ = [
+    "PROCESS",
     "READINESS",
+    "Process",
     "Readiness",
     "command_entry",
     "commands",
+    "process",
+    "process_remote",
     "readiness",
-    "remote",
+    "readiness_remote",
     "restart_entry",
     "start_entry",
     "stop_entry",
@@ -46,9 +51,26 @@ class Readiness:
 READINESS = ServiceKey[Readiness]("system-service.readiness")
 
 
+class Process:
+    """The node process this service runs."""
+
+    def restart(self) -> None:
+        """End the node as Ctrl+C does, for the supervisor to start it again."""
+        signal.raise_signal(signal.SIGINT)
+
+
+PROCESS = ServiceKey[Process]("system-service.process")
+
+
 @asynccontextmanager
 async def _readiness(ctx: Context):
     ctx.offer(READINESS, Readiness(ctx.accept(CONTRIB_STATUS)))
+    yield
+
+
+@asynccontextmanager
+async def _process(ctx: Context):
+    ctx.offer(PROCESS, Process())
     yield
 
 
@@ -65,7 +87,9 @@ async def _commands(ctx: Context):
 
 
 readiness = Contrib(accepts=[CONTRIB_STATUS], offers=[READINESS], lifespan=_readiness)
-remote = RemoteEntry(READINESS, ("ready",))
+readiness_remote = RemoteEntry(READINESS, ("ready",))
+process = Contrib(offers=[PROCESS], lifespan=_process)
+process_remote = RemoteEntry(PROCESS, ("restart",))
 commands = Contrib(accepts=[CONFIGURATION, COMMANDS, CLIENT, TIMER], lifespan=_commands)
 command_entry = CommandEntry(contrib="system-service", help=DESCRIPTION)
 start_entry = CommandEntry(contrib="system-service", help=DEPRECATED["start"])

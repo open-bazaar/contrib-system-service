@@ -22,6 +22,7 @@ Repository = "https://github.com/open-bazaar/contrib-system-service"
 
 [project.entry-points."bazaar_compute_node.contribs"]
 system-service = "bazaar_contrib_system_service:commands"
+system-service-process = "bazaar_contrib_system_service:process"
 system-service-readiness = "bazaar_contrib_system_service:readiness"
 
 [project.entry-points."bazaar_compute_node.commands"]
@@ -31,14 +32,15 @@ stop = "bazaar_contrib_system_service:stop_entry"
 restart = "bazaar_contrib_system_service:restart_entry"
 
 [project.entry-points."bazaar_compute_node.remotes"]
-system-service-readiness = "bazaar_contrib_system_service:remote"
+system-service = "bazaar_contrib_system_service:process_remote"
+system-service-readiness = "bazaar_contrib_system_service:readiness_remote"
 
 [build-system]
 requires = ["uv_build>=0.13.0,<0.14.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
-dev = ["bazaar-compute-node>=0.3.0rc13,<0.4", "bazaar-contrib-timer-wheel>=0.3.0rc10,<0.4", "ruff>=0.9.0", "pyright==1.1.414", "pytest>=8.3.0", "pytest-asyncio>=0.24.0", "blockbuster>=1.5.29,<1.6"]
+dev = ["bazaar-compute-node>=0.3.0rc13,<0.4", "bazaar-contrib-sidecar-unix~=0.3.0rc11; sys_platform != 'win32'", "bazaar-contrib-sidecar-windows~=0.3.0rc11; sys_platform == 'win32'", "bazaar-contrib-timer-wheel>=0.3.0rc10,<0.4", "ruff>=0.9.0", "pyright==1.1.414", "pytest>=8.3.0", "pytest-asyncio>=0.24.0", "blockbuster>=1.5.29,<1.6"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

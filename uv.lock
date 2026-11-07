@@ -90,15 +90,43 @@ wheels = [
 
 [[package]]
 name = "bazaar-contrib-sidecar"
-version = "0.3.0rc13"
+version = "0.3.0rc17"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bazaar-contrib-timer" },
     { name = "bazaar-core" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7b/1e/319aeda84e27ab18c60b7b79633e25d87718f1c2bba242abe17674527249/bazaar_contrib_sidecar-0.3.0rc13.tar.gz", hash = "sha256:16a901b13825e1d8dc46985fcc9be8c3580415d14af264e066ae8fadfd0283bf", size = 10076, upload-time = "2026-11-01T13:47:31.58Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/75/f7/41a62da3c62a0db49b7aef745e0b46b4fb3f7a9bb1e4bc02ac7049628bda/bazaar_contrib_sidecar-0.3.0rc17.tar.gz", hash = "sha256:66a1c3fd8cf1f7e974e4651d8e07dd243ea9589bde9dc3dc54b57286e234dec2", size = 10385, upload-time = "2026-11-04T03:25:21.389Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7a/b6/2f68cce51ebec838d5c58521b5213d21b5e4f592f2f1a22fbce9df847ed8/bazaar_contrib_sidecar-0.3.0rc13-py3-none-any.whl", hash = "sha256:33874c54a9632af8d0501310355495b7154ebfbccd46daecb649950252861d4c", size = 12955, upload-time = "2026-11-01T13:47:30.794Z" },
+    { url = "https://files.pythonhosted.org/packages/6e/29/9133709b64c84a5164fee4067d7a3e07450334b8c693b01a43a37bf96955/bazaar_contrib_sidecar-0.3.0rc17-py3-none-any.whl", hash = "sha256:bf77c7c7dfcbaaa426c5944f405e8fe35317adf07fc8133986e29154ec408377", size = 13262, upload-time = "2026-11-04T03:25:20.428Z" },
+]
+
+[[package]]
+name = "bazaar-contrib-sidecar-unix"
+version = "0.3.0rc11"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bazaar-contrib-sidecar" },
+    { name = "bazaar-contrib-timer" },
+    { name = "bazaar-core" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/9d/9100f25f90a73bac69be16bb520c911d758e07d180b1db4924aba65f1050/bazaar_contrib_sidecar_unix-0.3.0rc11.tar.gz", hash = "sha256:61fcb7fa1d4c6a9734ae0a9b72ea3d18efb1d6cb44fbb1c026cb436c1d980d23", size = 7532, upload-time = "2026-11-02T03:26:37.159Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bc/23/0e7e6f171a0a04e23e5e5b4b608fced1e3c688324bd42c10d74fa9ab5ac1/bazaar_contrib_sidecar_unix-0.3.0rc11-py3-none-any.whl", hash = "sha256:d230b44579e9e48fc22cb29f13a0e8982fec4b2754e931e24bef779966377097", size = 8856, upload-time = "2026-11-02T03:26:36.338Z" },
+]
+
+[[package]]
+name = "bazaar-contrib-sidecar-windows"
+version = "0.3.0rc11"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bazaar-contrib-sidecar" },
+    { name = "bazaar-contrib-timer" },
+    { name = "bazaar-core" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/67/75/a16d94b8643d6392b71371c8f2b64a23dde71bd77f396ac52c6b525c84cc/bazaar_contrib_sidecar_windows-0.3.0rc11.tar.gz", hash = "sha256:af88a5aca18438e8dc75356838fa42472f62093bda88ccda1e1abbc8839aee70", size = 7639, upload-time = "2026-11-02T03:28:14.165Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b4/55/4a19f0e98253218cffb07d8b799b99b40ec1cc985b0a3e3f5823e1f19026/bazaar_contrib_sidecar_windows-0.3.0rc11-py3-none-any.whl", hash = "sha256:924d7104e9387b675772fcc1b29354748aebd85e52db2ecd14b1dc461c674f81", size = 9040, upload-time = "2026-11-02T03:28:13.374Z" },
 ]
 
 [[package]]
@@ -131,6 +159,8 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "bazaar-compute-node" },
+    { name = "bazaar-contrib-sidecar-unix", marker = "sys_platform != 'win32'" },
+    { name = "bazaar-contrib-sidecar-windows", marker = "sys_platform == 'win32'" },
     { name = "bazaar-contrib-timer-wheel" },
     { name = "blockbuster" },
     { name = "pyright" },
@@ -154,6 +184,8 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "bazaar-compute-node", specifier = ">=0.3.0rc13,<0.4" },
+    { name = "bazaar-contrib-sidecar-unix", marker = "sys_platform != 'win32'", specifier = "~=0.3.0rc11" },
+    { name = "bazaar-contrib-sidecar-windows", marker = "sys_platform == 'win32'", specifier = "~=0.3.0rc11" },
     { name = "bazaar-contrib-timer-wheel", specifier = ">=0.3.0rc10,<0.4" },
     { name = "blockbuster", specifier = ">=1.5.29,<1.6" },
     { name = "pyright", specifier = "==1.1.414" },
