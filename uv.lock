@@ -143,7 +143,7 @@ wheels = [
 
 [[package]]
 name = "bazaar-contrib-system-service"
-version = "0.3.0rc1"
+version = "0.3.0rc2"
 source = { editable = "." }
 dependencies = [
     { name = "bazaar-contrib-config" },
