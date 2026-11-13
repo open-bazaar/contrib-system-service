@@ -6,7 +6,7 @@ user unit on Linux, a launchd agent on macOS and a scheduled task on Windows.
 
 ## Setup
 
-Add the plugin to a node, register the node to start at login, then start it:
+Add the Contrib to a node, register the node to start at login, then start it:
 
 ```sh
 bcn contrib add system-service --enable
